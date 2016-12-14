@@ -29,11 +29,28 @@ public class Warrior : MonoBehaviour {
 
 	List<WalkedCell> walkedCells = new List<WalkedCell> ();
 
+	[HideInInspector]
+	public bool isEnemy = false;
+
 
 	void Start () {
 		characterController = GetComponent<CharacterController> ();
 		anim = GetComponent<Animator> ();
-		grid = GameManager.instance.Grid;
+		if (!isEnemy) {
+			grid = GameManager.instance.Grid;
+		} else {
+			var gameGrid = GameManager.instance.Grid;
+			var width = gameGrid.GetLength (0);
+			var height = gameGrid.GetLength (1);
+			grid = new Cell[width, height];
+
+			for (var i = 0; i < width; i++) {
+				for (var j = 0; j < height; j++) {
+					grid [i, j] = gameGrid [i, height - j - 1];
+				}
+			}
+		}
+
 		Invoke ("StartMove", 1f);
 	}
 	

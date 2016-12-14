@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour {
 
 	public Cell[,] Grid = new Cell[width, height * 2];
 	List<Warrior> myWarriors = new List<Warrior> ();
-	List<WarriorEnemy> enemyWarriors = new List<WarriorEnemy> ();
+	List<Warrior> enemyWarriors = new List<Warrior> ();
 
 	int obstacleCount = 0;
 	const int obstacleMaxCount = 7;
@@ -209,9 +209,10 @@ public class GameManager : MonoBehaviour {
 			pos.y = 0.8f;
 
 			var war = Instantiate (prefabWarriorEnemy, pos, Quaternion.identity) as GameObject;
-			var w = war.GetComponent<WarriorEnemy> ();
+			var w = war.GetComponent<Warrior> ();
 			w.x = c.x;
 			w.y = 0;
+			w.isEnemy = true;
 			enemyWarriors.Add (w);
 
 			yield return new WaitForSeconds (Random.Range (0.5f, 2f));
