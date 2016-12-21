@@ -20,9 +20,9 @@ public class Cell : MonoBehaviour {
 
 	public void ToggleCell () {
 		if (obstacle) {
-			r.material.color = new Color (0, 0.8f, 0, 0.25f);
+			r.material.SetColor("_BaseColor", new Color (0, 0.8f, 0, 0.25f));
 		} else {
-			r.material.color = new Color (0, 0.6f, 0, 0.8f);
+			r.material.SetColor("_BaseColor", new Color (0, 0.6f, 0, 0.8f));
 		}
 
 		obstacle = !obstacle;

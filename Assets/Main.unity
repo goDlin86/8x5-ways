@@ -2852,6 +2852,8 @@ MonoBehaviour:
   - {fileID: 100000, guid: 0c71a7347687a457ab26fa324a8392ab, type: 2}
   - {fileID: 100000, guid: 13b17ac3affdc4dbb81931c8944c5490, type: 2}
   - {fileID: 100000, guid: d9561134a68064578a493a9e675dd53f, type: 2}
+  prefabMagicIn: {fileID: 1664506106712110, guid: d37cb5509a183445092d2d9fb12fee3d,
+    type: 2}
   timerText: {fileID: 1039497501}
   obstacleCountText: {fileID: 363159212}
 --- !u!4 &1977150519

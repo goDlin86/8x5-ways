@@ -464,7 +464,7 @@ GameObject:
   - component: {fileID: 11100000}
   - component: {fileID: 9500000}
   - component: {fileID: 143000011616147170}
-  - component: {fileID: 114449198647951650}
+  - component: {fileID: 114058013415766080}
   m_Layer: 0
   m_Name: Warrior_02
   m_TagString: Untagged
@@ -1462,6 +1462,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.76, y: 1.0828986, z: 0.79689276}
   m_Center: {x: -0.031335358, y: 0.08409184, z: 0.045357496}
+--- !u!114 &114058013415766080
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5600e172db6934d2fba9ebc167365f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0.25
+  x: 0
+  y: 0
+  isEnemy: 0
 --- !u!114 &114260180588564226
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1473,20 +1488,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9168651f1c7746b397e0f146de6b07b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114449198647951650
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f254f99d8ea274629b7d96444c8b5594, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0.25
-  x: 0
-  y: 0
 --- !u!143 &143000011616147170
 CharacterController:
   m_ObjectHideFlags: 1

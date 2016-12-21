@@ -112,7 +112,7 @@ public class Warrior : MonoBehaviour {
 		var startingPos = transform.position;
 		var dir = pos - startingPos;
 		var speed = dir.magnitude / time;
-		while (elapsedTime < time)
+		while (elapsedTime < time) // TODO ???????
 		{
 			characterController.SimpleMove(dir.normalized * speed);
 			elapsedTime += Time.deltaTime;

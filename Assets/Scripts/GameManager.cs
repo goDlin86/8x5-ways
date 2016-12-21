@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour {
 
 	const int width = 8;
 	const int height = 5;
+	const int obstacleMaxCount = 7;
+	const int obstacleMaxRowCount = 4;
 
 	const float scaleFactor = 0.7f;
 
@@ -19,6 +21,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject gameUI;
 	public GameObject tooltipUI;
 	public GameObject[] prefabObstacles;
+	public GameObject prefabMagicIn;
 
 	public Text timerText;
 	int timer = 10;
@@ -28,11 +31,9 @@ public class GameManager : MonoBehaviour {
 	List<Warrior> enemyWarriors = new List<Warrior> ();
 
 	int obstacleCount = 0;
-	const int obstacleMaxCount = 7;
 	public Text obstacleCountText;
 
 	int[] obstacleRowCount = new int[height - 2];
-	const int obstacleMaxRowCount = 4;
 
 	Vector3 lastObjPos = Vector3.zero;
 
@@ -132,7 +133,7 @@ public class GameManager : MonoBehaviour {
 					//	cell.layer = 9;
 					//}
 				} else {
-					r.material.color = greenColor;
+					r.material.SetColor("_BaseColor", greenColor);
 					cell.layer = 8;
 				}
 
@@ -176,10 +177,10 @@ public class GameManager : MonoBehaviour {
 				var cell = Grid [i, j];
 				var r = cell.GetComponent<Renderer> ();
 				if (j == 0) {
-					r.material.color = greenColor;
+					r.material.SetColor("_BaseColor", greenColor);
 					cell.gameObject.layer = 9;
 				} else {
-					r.material.color = new Color (0, 0, 0, 98f / 255f);
+					r.material.SetColor("_BaseColor", new Color (0, 0, 0, 98f / 255f));
 				}
 			}
 		}
@@ -188,6 +189,11 @@ public class GameManager : MonoBehaviour {
 		for (var i = 0; i < width; i++) {
 			for (var j = 1; j < height * 2 - 1; j++) {
 				if (Grid [i, j].obstacle) {
+					if (j < 4) {
+						var magic = Instantiate (prefabMagicIn, Grid[i, j].transform.position, Quaternion.Euler (-90f, 0, 0)) as GameObject;
+						Destroy (magic, 0.5f);
+					}
+
 					var prefab = prefabObstacles [Random.Range (0, 1000) % 5];
 					var obj = Instantiate (prefab, Grid [i, j].transform.position, Quaternion.Euler (-90f, 0, 0)) as GameObject;
 					if (obj.name.Contains("Tree0"))
@@ -215,7 +221,7 @@ public class GameManager : MonoBehaviour {
 			w.isEnemy = true;
 			enemyWarriors.Add (w);
 
-			yield return new WaitForSeconds (Random.Range (0.5f, 2f));
+			yield return new WaitForSeconds (Random.Range (0.5f, 3f));
 		}
 
 		yield break;
@@ -236,6 +242,7 @@ public class GameManager : MonoBehaviour {
 				Cell c = obj.GetComponent<Cell> ();
 				if (obstacleRowCount [c.y - 1] == obstacleMaxRowCount) {
 					tooltipUI.GetComponent<Animation> ().Play ();
+
 				}
 
 				if (c.obstacle || ((!c.obstacle && obstacleCount < obstacleMaxCount) && obstacleRowCount [c.y - 1] < obstacleMaxRowCount)) {
@@ -251,6 +258,19 @@ public class GameManager : MonoBehaviour {
 
 					var count = obstacleMaxCount - obstacleCount;
 					obstacleCountText.text = count.ToString ();
+
+					var color = count == 0 ? redColor : greenColor;						
+					for (var i = 0; i < width; i++) {
+						for (var j = 1; j < height - 1; j++) {
+							if (!Grid [i, j].obstacle) {
+								Grid [i, j].GetComponent<Renderer> ().material.SetColor ("_BaseColor", color);
+
+								if (obstacleRowCount [j - 1] == obstacleMaxRowCount) {
+									Grid [i, j].GetComponent<Renderer> ().material.SetColor ("_BaseColor", redColor);
+								}
+							}
+						}
+					}
 				}
 
 			}
@@ -278,7 +298,7 @@ public class GameManager : MonoBehaviour {
 			w.y = c.y;
 			myWarriors.Add (w);
 
-			obj.GetComponent<Renderer> ().material.color = redColor;
+			obj.GetComponent<Renderer> ().material.SetColor("_BaseColor", redColor);
 			obj.layer = 1;
 		}
 	}
