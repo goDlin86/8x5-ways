@@ -209,19 +209,20 @@ public class GameManager : MonoBehaviour {
 		
 
 	IEnumerator CreateEnemies() {
-		while (enemyWarriors.Count < 5) {
+		while (enemyWarriors.Count < 3) {
 			Cell c = Grid [Random.Range(0, width - 1), height * 2 - 1];
 			var pos = c.transform.position;
 			pos.y = 0.8f;
 
 			var war = Instantiate (prefabWarriorEnemy, pos, Quaternion.identity) as GameObject;
 			var w = war.GetComponent<Warrior> ();
-			w.x = c.x;
-			w.y = 0;
+			var n = war.GetComponent<Navigator> ();
+			n.x = c.x;
+			n.y = 0;
 			w.isEnemy = true;
 			enemyWarriors.Add (w);
 
-			yield return new WaitForSeconds (Random.Range (0.5f, 3f));
+			yield return new WaitForSeconds (Random.Range (2.5f, 6f));
 		}
 
 		yield break;
@@ -294,8 +295,9 @@ public class GameManager : MonoBehaviour {
 
 			var war = Instantiate (prefabWarrior, pos, Quaternion.identity) as GameObject;
 			var w = war.GetComponent<Warrior> ();
-			w.x = c.x;
-			w.y = c.y;
+			var n = war.GetComponent<Navigator> ();
+			n.x = c.x;
+			n.y = c.y;
 			myWarriors.Add (w);
 
 			obj.GetComponent<Renderer> ().material.SetColor("_BaseColor", redColor);

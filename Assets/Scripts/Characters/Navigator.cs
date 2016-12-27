@@ -1,6 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 
 public class WalkedCell {
@@ -13,15 +13,15 @@ public class WalkedCell {
 	}
 }
 
-public class Warrior : MonoBehaviour {
+public class Navigator : MonoBehaviour {
 
-	public float speed;
+	const float time = 3f; //???????
+
 	[HideInInspector]
 	public int x, y;
 	public Point moveTarget;
 
 	private CharacterController characterController;
-	private Animator anim;
 	private Cell[,] grid;
 
 	List<Point> route = new List<Point> ();
@@ -29,19 +29,27 @@ public class Warrior : MonoBehaviour {
 
 	List<WalkedCell> walkedCells = new List<WalkedCell> ();
 
-	[HideInInspector]
-	public bool isEnemy = false;
+	#region Events
+	public delegate void MovingEventHandler(Vector3 targetCoordinate);
+	public delegate void EventHandler();
+	public event EventHandler OnStartWalk;
+	public event MovingEventHandler OnWalking;
+	public event EventHandler OnStopWalk;
+	#endregion Events
 
 
-	void Start () {
+	void Awake () {
 		characterController = GetComponent<CharacterController> ();
-		anim = GetComponent<Animator> ();
-		if (!isEnemy) {
-			grid = GameManager.instance.Grid;
-		} else {
-			var gameGrid = GameManager.instance.Grid;
-			var width = gameGrid.GetLength (0);
-			var height = gameGrid.GetLength (1);
+		//Invoke ("StartMove", 1f);
+	}
+
+	public void getRoute() {
+		grid = GameManager.instance.Grid;
+		var width = grid.GetLength (0);
+		var height = grid.GetLength (1);
+
+		if (GetComponent<Warrior> ().isEnemy) {
+			var gameGrid = grid;
 			grid = new Cell[width, height];
 
 			for (var i = 0; i < width; i++) {
@@ -50,24 +58,7 @@ public class Warrior : MonoBehaviour {
 				}
 			}
 		}
-
-		Invoke ("StartMove", 1f);
-	}
-	
-	void Update () {
-
-	}
-
-	void StartMove() {
-		getRoute ();
-
-		anim.SetBool ("move", true);
-		StartCoroutine (Move (3));
-	}
-
-	void getRoute() {
-		var width = grid.GetLength (0);
-		var height = grid.GetLength (1);
+			
 		var result = new bool [width, height];
 
 		for (var i = 0; i < width; i++) {
@@ -80,8 +71,19 @@ public class Warrior : MonoBehaviour {
 		route = aStar.FindPath ();
 	}
 
+	public void StartMoving() {
+		if (OnStartWalk != null)
+			OnStartWalk ();
+		StartCoroutine ("Move");
+	}
 
-	IEnumerator Move(float time)
+	public void StopMoving() {
+		if (OnStopWalk != null)
+			OnStopWalk ();
+		StopCoroutine ("Move");
+	}
+
+	IEnumerator Move()
 	{
 		if (currentTarget < route.Count) {
 			moveTarget = route [currentTarget];
@@ -90,7 +92,9 @@ public class Warrior : MonoBehaviour {
 			if (y == grid.GetLength (1) - 1) {
 				//WIN
 				print("WIN");
-				anim.SetBool ("move", false);
+				if (OnStopWalk != null)
+					OnStopWalk ();
+				
 				Destroy (gameObject, 1f);
 				yield break;
 			}
@@ -122,7 +126,7 @@ public class Warrior : MonoBehaviour {
 		x = moveTarget.x;
 		y = moveTarget.y;
 
-		StartCoroutine (Move (3));
+		StartCoroutine ("Move");
 	}
 
 	IEnumerator RotateToTarget(Quaternion rotation, float time) {
@@ -132,6 +136,7 @@ public class Warrior : MonoBehaviour {
 			elapsedTime += Time.deltaTime;
 			yield return null;
 		}
+
 	}
 
 
@@ -163,5 +168,4 @@ public class Warrior : MonoBehaviour {
 
 		return false;
 	}
-
 }
